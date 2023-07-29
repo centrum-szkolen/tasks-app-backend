@@ -9,4 +9,4 @@ DB_NAME = os.getenv("DB_NAME")
 client = MongoClient(DB_URI)
 db = client[DB_NAME]
 
-# users_collection = db['users']
+users_collection = db['users']
