@@ -13,10 +13,14 @@ load_dotenv()
 
 app = Flask(__name__)
 
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
+# TODO 1 DODANIE support_credentaisl
+cors = CORS(app, supports_credentials=True)
 
+app.config['CORS_HEADERS'] = 'Content-Type'
 app.secret_key = os.getenv("SECRET_KEY")
+
+ # TODO 2 DODANANIE wygaśnięcia sesji
+app.permanent_session_lifetime = datetime.timedelta(minutes=30)
 
 # ---------------------------------------------------------------------------------------------------------
 # Rejestracja użytkownika
@@ -82,8 +86,10 @@ def login():
 @app.route('/dashboard',methods=['GET'])
 def dashboard():
     if 'email' in session:
+        
         user = users_collection.find_one({'email':session['email']})
-        return get_response('Zalogowano jako ' + user['username'],True,200)
+        # TODO 3 Dodanie usera do responsa
+        return get_response('Zalogowano jako ' + user['username'],True,200,{'email':user['email'], 'username':user['username']})
     else:
      return get_response('Odmowa dostępu',False,403)
     
@@ -102,3 +108,4 @@ def logout():
 def get_users():
     users = users_collection.find({},{'_id':0})
     return jsonify(list(users))
+
