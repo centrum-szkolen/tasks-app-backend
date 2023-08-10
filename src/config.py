@@ -10,3 +10,4 @@ client = MongoClient(DB_URI)
 db = client[DB_NAME]
 
 users_collection = db['users']
+tasks_collection = db['tasks']
